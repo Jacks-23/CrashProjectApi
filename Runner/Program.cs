@@ -27,7 +27,7 @@ namespace Runner
             //stopwatch.Stop();
             //Console.WriteLine(stopwatch.Elapsed.ToString());
             //await AddProduct_should_add_a_product();
-            //await UpdateProduct_should_update_a_product();
+            await UpdateProduct_should_update_a_product();
             //await DeleteProductById_Should_remove_a_product();
 
             //await GetAllOrders_should_return_a_list_of_orders();
@@ -39,7 +39,7 @@ namespace Runner
             //await DeleteOrderById_should_remove_an_order();
 
             //await LogIn_should_return_Jean();
-            await SignUp_should_return_Jeanne_user();
+            //await SignUp_should_return_Jeanne_user();
         }
 
         private static void Initialize ()

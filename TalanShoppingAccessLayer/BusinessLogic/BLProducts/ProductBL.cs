@@ -79,7 +79,7 @@ namespace TalanShoppingAccessLayer.BusinessLogic.BLProducts
                 " Description = @Description" +
                 " Where ProductId = @ProductId";
 
-                bool productExists = await ValidateProductExists(product.ProductId);
+                bool productExists = ValidateProductExists(product.ProductId);
 
                 if (productExists)
                     await db.ExecuteAsync(sql, product);
@@ -92,22 +92,21 @@ namespace TalanShoppingAccessLayer.BusinessLogic.BLProducts
                 throw new Exception(e.Message);
             }     
         }
-        private async Task<bool> ValidateProductExists(int productId)
+        private bool ValidateProductExists(int productId)
         {
             var sql = "Select [ProductId]" +
                 " From Products" +
                 $" Where ProductId = {productId}";
-            
-            var queryResult = await db.ExecuteAsync(sql, productId);
 
-            if (queryResult == -1)
-                return false;
-            return true;
+            var queryResult = db.Query(sql, productId).Any();
+
+            return queryResult;
         }
+
         public async Task DeleteProductById(int productId)
         {
-            bool productExists = await ValidateProductExists(productId);  
-            bool productInOrder = await ValidateProductInOrder(productId);
+            bool productExists = ValidateProductExists(productId);  
+            bool productInOrder = ValidateProductInOrder(productId);
 
             if (!productExists)
                 throw new Exception("the product doesn't exist");
@@ -116,18 +115,16 @@ namespace TalanShoppingAccessLayer.BusinessLogic.BLProducts
             else
                 await db.ExecuteAsync($"Delete From Products Where ProductId = {productId}");
         }
-        private async Task<bool> ValidateProductInOrder(int productId)
+        private bool ValidateProductInOrder(int productId)
         {
             var sql = "Select * from Products p" +
                 " Inner join Products_Orders po On po.ProductId = p.ProductId" +
                 " Inner join Orders o On o.OrderId = po.OrderId" +
                 $" Where p.ProductId = {productId}";
 
-            var queryResult = await db.ExecuteAsync(sql, productId);
-            
-            if (queryResult == -1)
-                return false;
-            return true;
+            var queryResult = db.Query(sql, productId).Any();
+
+            return queryResult;
         }
     }
 }
